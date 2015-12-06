@@ -2,6 +2,7 @@ package com.example.wuyuxi.webcam;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,12 @@ public class VideoActivity extends Activity {
     MediaPlayer mediaPlayer;
     private Button back;
     VideoView videoView;
+
+    public static void launch(Activity activity,String url){
+        Intent intent = new Intent(activity, VideoActivity.class);
+        intent.putExtra("url", url);
+        activity.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
