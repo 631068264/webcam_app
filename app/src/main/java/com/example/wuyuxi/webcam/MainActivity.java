@@ -3,7 +3,6 @@ package com.example.wuyuxi.webcam;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -15,14 +14,16 @@ public class MainActivity extends Activity {
     private WebView webView;
     private ActionBar actionBar;
 
-    @SuppressLint("JavascriptInterface")
+    @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
 
         actionBar = getActionBar();
-        actionBar.hide();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
 
         webView = (WebView) findViewById(R.id.webview);
@@ -44,9 +45,7 @@ public class MainActivity extends Activity {
         Object object = new Object() {
             @JavascriptInterface
             public void playVideo(String url) {
-                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
-                intent.putExtra("url", url);
-                startActivity(intent);
+                VideoActivity.launch(MainActivity.this, url);
             }
         };
         return object;
@@ -57,9 +56,6 @@ public class MainActivity extends Activity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
-        }
-
-        public void onPageFinished(WebView view, String url) {
         }
     }
 

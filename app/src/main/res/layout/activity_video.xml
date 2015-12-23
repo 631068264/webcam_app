@@ -34,9 +34,44 @@
             android:textSize="20dp" />
     </LinearLayout>
 
-    <VideoView
+
+    <SurfaceView
         android:id="@+id/video"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="播放" />
+
+        <Button
+            android:id="@+id/btn_pause"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="停止" />
+
+        <Button
+            android:id="@+id/btn_replay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="重播" />
+    </LinearLayout>
+
+    <!--<VideoView-->
+    <!--android:id="@+id/video"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="300dp"-->
+    <!--android:layout_marginTop="50dp" />-->
 </LinearLayout>
