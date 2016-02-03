@@ -3,10 +3,12 @@ package com.example.wuyuxi.webcam;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
@@ -51,18 +53,25 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
             actionBar.hide();
         }
 
-
+        back = (Button) findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         url = getIntent().getStringExtra("url");
-        Log.d("URL", url);
+        Log.e("URL", url);
         mSurfaceView = (SurfaceView) findViewById(R.id.video);
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
-//        mHolder.setFormat(PixelFormat.RGBA_8888);
+        mHolder.setFormat(PixelFormat.RGBA_8888);
 
 
     }
 
     private void playVideo(String url) {
+
         doCleanUp();
         try {
             mMediaPlayer = new MediaPlayer(this);
@@ -93,6 +102,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
 
     private void releasePlayer() {
         if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
