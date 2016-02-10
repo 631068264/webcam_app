@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -82,6 +83,15 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
             mMediaPlayer.setOnCompletionListener(this);
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnVideoSizeChangedListener(this);
+            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    if (what == 1 && extra == -5) {
+                        Toast.makeText(VideoActivity.this, "请检查客户端是否开启", Toast.LENGTH_LONG).show();
+                    }
+                    return true;
+                }
+            });
         } catch (IOException e) {
             Log.e(TAG, "error" + e.getMessage(), e);
         }

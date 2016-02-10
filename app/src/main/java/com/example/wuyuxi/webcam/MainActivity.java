@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(Jsinterface(), "ANDROIDAPI");
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        webView.loadUrl("http://192.168.1.105/webcam/app");
+        webView.loadUrl("http://192.168.1.107/webcam/app");
     }
 
     private Object Jsinterface() {
