@@ -1,6 +1,5 @@
 package com.example.wuyuxi.webcam;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -49,11 +48,6 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
         setContentView(R.layout.activity_video);
 
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-
         back = (Button) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +80,12 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
             mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
-                    if (what == 1 && extra == -5) {
-                        Toast.makeText(VideoActivity.this, "请检查客户端是否开启", Toast.LENGTH_LONG).show();
+                    if (what == 1) {
+                        if (extra == -5) {
+                            Toast.makeText(VideoActivity.this, "请检查客户端是否开启", Toast.LENGTH_LONG).show();
+                        } else if (extra == -1094995529) {
+                            Toast.makeText(VideoActivity.this, "请检查客户端服务器ip或设备号有没有填错", Toast.LENGTH_LONG).show();
+                        }
                     }
                     return true;
                 }
