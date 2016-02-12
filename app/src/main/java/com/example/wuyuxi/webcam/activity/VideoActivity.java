@@ -2,8 +2,10 @@ package com.example.wuyuxi.webcam.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.PixelFormat;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -15,26 +17,19 @@ import com.example.wuyuxi.webcam.util.Logging;
 
 import java.io.IOException;
 
-import io.vov.vitamio.MediaPlayer;
-
 /**
- * Created by wuyuxi on 2015/11/27.
+ * @Annotation //视频播放
  */
-public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnVideoSizeChangedListener, SurfaceHolder.Callback {
-    private static final String TAG = "MediaPlayer";
-    private int mVideoWidth;
-    private int mVideoHeight;
-    private boolean mIsVideoSizeKnown = false;
-    private boolean mIsVideoReadyToBePlayed = false;
+public class VideoActivity extends Activity {
     private SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
     MediaPlayer mMediaPlayer;
     private Button back;
     private String url;
-    //VideoView videoView;
     private Button btn_play;
     private Button btn_pause;
     private Button btn_replay;
+    public static final int SYNS_HANDLER = 1 * 1000;
 
     public static void launch(Activity activity, String url) {
         Intent intent = new Intent(activity, VideoActivity.class);
@@ -45,142 +40,147 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
-            return;
         setContentView(R.layout.activity_video);
 
+        url = getIntent().getStringExtra("url");
+        Logging.d(url);
+        mSurfaceView = (SurfaceView) findViewById(R.id.video);
+
+        mHolder = mSurfaceView.getHolder();
+        mHolder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setDisplay(mHolder);
+                play();
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+
+            }
+        });
+        mHolder.setFixedSize(480, 320);
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        btn_play = (Button) findViewById(R.id.btn_play);
+        btn_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMediaPlayer.start();
+                btn_play.setEnabled(false);
+            }
+        });
+
+        btn_pause = (Button) findViewById(R.id.btn_pause);
+        btn_pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pause();
+            }
+        });
+
+        btn_replay = (Button) findViewById(R.id.btn_replay);
+        btn_replay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replay();
+            }
+        });
 
         back = (Button) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Logging.d("video_close");
+                release();
                 finish();
             }
         });
-        url = getIntent().getStringExtra("url");
-        Logging.e(url);
-        mSurfaceView = (SurfaceView) findViewById(R.id.video);
-        mHolder = mSurfaceView.getHolder();
-        mHolder.addCallback(this);
-        mHolder.setFormat(PixelFormat.RGBA_8888);
-
-
     }
 
-    private void playVideo(String url) {
-
-        doCleanUp();
-        try {
-            mMediaPlayer = new MediaPlayer(this);
-            mMediaPlayer.setDataSource(url);
-            mMediaPlayer.setDisplay(mHolder);
-            mMediaPlayer.prepareAsync();
-            mMediaPlayer.setOnBufferingUpdateListener(this);
-            mMediaPlayer.setOnCompletionListener(this);
-            mMediaPlayer.setOnPreparedListener(this);
-            mMediaPlayer.setOnVideoSizeChangedListener(this);
-            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    if (what == 1) {
-                        if (extra == -5) {
-                            Toast.makeText(VideoActivity.this, "请检查客户端是否开启", Toast.LENGTH_LONG).show();
-                        } else if (extra == -1094995529) {
-                            Toast.makeText(VideoActivity.this, "请检查客户端服务器ip或设备号有没有填错", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    return true;
-                }
-            });
-        } catch (IOException e) {
-            Logging.e("error" + e.getMessage());
+    private void replay() {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            mMediaPlayer.seekTo(0);
+        } else {
+            if (mMediaPlayer != null) {
+                mMediaPlayer.start();
+            }
         }
     }
 
-    private void doCleanUp() {
-        mVideoWidth = 0;
-        mVideoHeight = 0;
-        mIsVideoReadyToBePlayed = false;
-        mIsVideoSizeKnown = false;
+    private void pause() {
+        if (btn_pause.getText().toString().trim().equals("继续")) {
+            btn_pause.setText("停止");
+            mMediaPlayer.start();
+        } else if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            btn_pause.setText("继续");
+            mMediaPlayer.pause();
+        } else {
+            btn_pause.setEnabled(false);
+            btn_play.setEnabled(true);
+        }
     }
 
-    private void startVideo() {
-        Logging.d("startVideoPlayback");
-        mHolder.setFixedSize(mVideoWidth, mVideoHeight);
-        mMediaPlayer.start();
-    }
+    private Handler handler = new Handler();
+    private Runnable checkPlaying = new Runnable() {
+        @Override
+        public void run() {
+            if (!mMediaPlayer.isPlaying()) {
+                btn_pause.setEnabled(false);
+                btn_play.setEnabled(true);
+            }
+            handler.postDelayed(this, SYNS_HANDLER);
+        }
+    };
 
-    private void releasePlayer() {
+
+    private void release() {
         if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
     }
 
+    private void play() {
+        try {
+            mMediaPlayer.reset();
+            mMediaPlayer.setDataSource(url);
+            mMediaPlayer.prepareAsync();
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+                    btn_play.setEnabled(false);
+                    handler.postDelayed(checkPlaying, SYNS_HANDLER);
+                }
+            });
+        } catch (IOException e) {
+            Toast.makeText(VideoActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
-    public void onDestroy() {
-        releasePlayer();
-        doCleanUp();
+    protected void onDestroy() {
+        release();
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        releasePlayer();
-        doCleanUp();
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        Logging.d("surfaceDestroyed created");
-
-        playVideo(url);
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Logging.d("surfaceChanged called");
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Logging.d("surfaceChanged called");
-    }
-
-    @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        Logging.d("onPrepared called");
-        mIsVideoReadyToBePlayed = true;
-        if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
-            startVideo();
-        }
-    }
-
-    @Override
-    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        Logging.i("onVideoSizeChanged called");
-        if (width == 0 || height == 0) {
-            Logging.e("invalid video width(" + width + ") or height(" + height + ")");
-            return;
-        }
-        mIsVideoSizeKnown = true;
-        mVideoWidth = width;
-        mVideoHeight = height;
-        if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
-            startVideo();
-        }
+        pause();
+        handler.removeCallbacks(checkPlaying);
     }
 }

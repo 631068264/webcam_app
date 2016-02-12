@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
 
+/**
+ * @Annotation // webView页面
+ */
 public class MainActivity extends Activity {
     private WebView webView;
     JavaScriptInterface mJavascriptInterface;
@@ -47,6 +50,11 @@ public class MainActivity extends Activity {
 
     public class JavaScriptInterface {
         @JavascriptInterface
+        public void playDirectVideo(String url) {
+            DirectVideoActivity.launch(MainActivity.this, url);
+        }
+
+        @JavascriptInterface
         public void playVideo(String url) {
             VideoActivity.launch(MainActivity.this, url);
         }
@@ -63,7 +71,7 @@ public class MainActivity extends Activity {
         }
 
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-           
+
             Toast.makeText(MainActivity.this, description, Toast.LENGTH_SHORT).show();
         }
     }
