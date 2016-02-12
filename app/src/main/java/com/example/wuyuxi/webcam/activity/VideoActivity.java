@@ -1,15 +1,17 @@
-package com.example.wuyuxi.webcam;
+package com.example.wuyuxi.webcam.activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.wuyuxi.webcam.R;
+import com.example.wuyuxi.webcam.util.Logging;
 
 import java.io.IOException;
 
@@ -56,7 +58,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
             }
         });
         url = getIntent().getStringExtra("url");
-        Log.e("URL", url);
+        Logging.e(url);
         mSurfaceView = (SurfaceView) findViewById(R.id.video);
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
@@ -91,7 +93,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
                 }
             });
         } catch (IOException e) {
-            Log.e(TAG, "error" + e.getMessage(), e);
+            Logging.e("error" + e.getMessage());
         }
     }
 
@@ -103,7 +105,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
     }
 
     private void startVideo() {
-        Log.v(TAG, "startVideoPlayback");
+        Logging.d("startVideoPlayback");
         mHolder.setFixedSize(mVideoWidth, mVideoHeight);
         mMediaPlayer.start();
     }
@@ -132,7 +134,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d(TAG, "surfaceDestroyed created");
+        Logging.d("surfaceDestroyed created");
 
         playVideo(url);
 
@@ -140,12 +142,12 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.d(TAG, "surfaceChanged called");
+        Logging.d("surfaceChanged called");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(TAG, "surfaceChanged called");
+        Logging.d("surfaceChanged called");
     }
 
     @Override
@@ -160,7 +162,7 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Log.d(TAG, "onPrepared called");
+        Logging.d("onPrepared called");
         mIsVideoReadyToBePlayed = true;
         if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
             startVideo();
@@ -169,9 +171,9 @@ public class VideoActivity extends Activity implements MediaPlayer.OnBufferingUp
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        Log.v(TAG, "onVideoSizeChanged called");
+        Logging.i("onVideoSizeChanged called");
         if (width == 0 || height == 0) {
-            Log.e(TAG, "invalid video width(" + width + ") or height(" + height + ")");
+            Logging.e("invalid video width(" + width + ") or height(" + height + ")");
             return;
         }
         mIsVideoSizeKnown = true;
