@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
+import com.example.wuyuxi.webcam.core.BaseActivity;
 import com.example.wuyuxi.webcam.util.Logging;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.io.IOException;
 /**
  * @Annotation //视频播放
  */
-public class VideoActivity extends Activity {
+public class VideoActivity extends BaseActivity {
     private SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
     MediaPlayer mMediaPlayer;

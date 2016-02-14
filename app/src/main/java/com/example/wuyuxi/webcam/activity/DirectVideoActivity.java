@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
+import com.example.wuyuxi.webcam.core.BaseActivity;
 import com.example.wuyuxi.webcam.util.Logging;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import io.vov.vitamio.MediaPlayer;
 /**
  * @Annotation //直播页面
  */
-public class DirectVideoActivity extends Activity implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnVideoSizeChangedListener, SurfaceHolder.Callback {
+public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnVideoSizeChangedListener, SurfaceHolder.Callback {
     private int mVideoWidth;
     private int mVideoHeight;
     private boolean mIsVideoSizeKnown = false;
