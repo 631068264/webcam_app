@@ -8,8 +8,6 @@ import com.example.wuyuxi.webcam.util.Logging;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * @Annotation //
  */
@@ -19,14 +17,10 @@ public class BaseActivity extends Activity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
         super.onDestroy();
     }
 

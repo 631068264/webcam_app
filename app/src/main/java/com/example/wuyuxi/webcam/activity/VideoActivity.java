@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -35,6 +35,7 @@ public class VideoActivity extends BaseActivity {
     public static void launch(Activity activity, String url) {
         Intent intent = new Intent(activity, VideoActivity.class);
         intent.putExtra("url", url);
+        Log.e("TAG", url);
         activity.startActivity(intent);
     }
 
@@ -114,6 +115,8 @@ public class VideoActivity extends BaseActivity {
                 mMediaPlayer.start();
             }
         }
+        btn_pause.setEnabled(true);
+        btn_play.setEnabled(false);
     }
 
     private void pause() {
@@ -129,17 +132,17 @@ public class VideoActivity extends BaseActivity {
         }
     }
 
-    private Handler handler = new Handler();
-    private Runnable checkPlaying = new Runnable() {
-        @Override
-        public void run() {
-            if (!mMediaPlayer.isPlaying()) {
-                btn_pause.setEnabled(false);
-                btn_play.setEnabled(true);
-            }
-            handler.postDelayed(this, SYNS_HANDLER);
-        }
-    };
+//    private Handler handler = new Handler();
+//    private Runnable checkPlaying = new Runnable() {
+//        @Override
+//        public void run() {
+//            if (!mMediaPlayer.isPlaying()) {
+//                btn_pause.setEnabled(false);
+//                btn_play.setEnabled(true);
+//            }
+//            handler.postDelayed(this, SYNS_HANDLER);
+//        }
+//    };
 
 
     private void release() {
@@ -148,6 +151,7 @@ public class VideoActivity extends BaseActivity {
                 mMediaPlayer.stop();
             }
             mMediaPlayer.release();
+            //handler.removeCallbacks(checkPlaying);
             mMediaPlayer = null;
         }
     }
@@ -162,7 +166,15 @@ public class VideoActivity extends BaseActivity {
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
                     btn_play.setEnabled(false);
-                    handler.postDelayed(checkPlaying, SYNS_HANDLER);
+                    //handler.postDelayed(checkPlaying, SYNS_HANDLER);
+                }
+            });
+
+            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    btn_pause.setEnabled(false);
+                    btn_play.setEnabled(true);
                 }
             });
         } catch (IOException e) {
@@ -182,6 +194,6 @@ public class VideoActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         pause();
-        handler.removeCallbacks(checkPlaying);
+        //handler.removeCallbacks(checkPlaying);
     }
 }

@@ -23,7 +23,7 @@ import de.greenrobot.event.EventBus;
 public class MainActivity extends BaseActivity {
     private WebView mWebView;
     JavaScriptInterface mJavascriptInterface;
-    String appUrl = "http://192.168.1.106/webcam/app";
+    String appUrl = "http://192.168.0.105/webcam/app";
 
 
     @Override
@@ -112,7 +112,17 @@ public class MainActivity extends BaseActivity {
         loadWebView(event.getUrl());
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }
 
 
