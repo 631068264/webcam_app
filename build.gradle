@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+//顶级构建文件
 buildscript {
-    repositories {
+    repositories {  //存储库 可以配置maven等
         jcenter()
     }
     dependencies {

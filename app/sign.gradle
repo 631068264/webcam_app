@@ -1,0 +1,11 @@
+android {
+    signingConfigs {
+        release {
+            def keystoreDir = projectDir.absolutePath + '/../keystore/'
+            keyAlias file(keystoreDir + 'alias').text
+            keyPassword file(keystoreDir + 'password').text
+            storeFile file(keystoreDir + 'keystore')
+            storePassword file(keystoreDir + 'password').text
+        }
+    }
+}

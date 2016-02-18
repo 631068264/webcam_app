@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
+apply from: 'sign.gradle'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.example.wuyuxi.webcam"
         minSdkVersion 14
@@ -13,6 +13,8 @@ android {
     }
     buildTypes {
         release {
+            //˙指定签名release
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
