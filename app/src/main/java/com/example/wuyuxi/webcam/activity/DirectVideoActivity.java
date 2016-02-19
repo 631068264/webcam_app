@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
-import com.example.wuyuxi.webcam.util.Logging;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
             }
         });
         url = getIntent().getStringExtra("url");
-        Logging.e(url);
+        Logger.e(url);
         mSurfaceView = (SurfaceView) findViewById(R.id.video);
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
@@ -90,7 +90,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
                 }
             });
         } catch (IOException e) {
-            Logging.e("error" + e.getMessage());
+            Logger.e(e, "error");
         }
     }
 
@@ -102,9 +102,9 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
     }
 
     private void startVideo() {
-        Logging.d("startVideoPlayback");
         mHolder.setFixedSize(mVideoWidth, mVideoHeight);
         mMediaPlayer.start();
+        Logger.e("直播开始");
     }
 
     private void releasePlayer() {
@@ -131,7 +131,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Logging.d("surfaceDestroyed created");
+        Logger.e("surfaceDestroyed created");
 
         playVideo(url);
 
@@ -139,12 +139,12 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Logging.d("surfaceChanged called");
+        Logger.e("surfaceChanged called");
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Logging.d("surfaceChanged called");
+        Logger.e("surfaceChanged called");
     }
 
     @Override
@@ -159,7 +159,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Logging.d("onPrepared called");
+        Logger.e("onPrepared called");
         mIsVideoReadyToBePlayed = true;
         if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
             startVideo();
@@ -168,9 +168,9 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        Logging.i("onVideoSizeChanged called");
+        Logger.i("onVideoSizeChanged called");
         if (width == 0 || height == 0) {
-            Logging.e("invalid video width(" + width + ") or height(" + height + ")");
+            Logger.e("invalid video width(" + width + ") or height(" + height + ")");
             return;
         }
         mIsVideoSizeKnown = true;

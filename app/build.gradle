@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
+apply plugin: 'versionPlugin'
 apply from: 'sign.gradle'
+versionPlugin {
+    buildTypesMatcher = 'release|debug'
+    supportBuildNumber = false
+    buildNumberPrefix = 'b'
+    fileNameFormat = 'Webcam_$buildType-v$versionName-c$versionCode'
+}
 
 android {
     compileSdkVersion 23
@@ -8,17 +15,25 @@ android {
         applicationId "com.example.wuyuxi.webcam"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "0.9.8"
     }
     buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         release {
             //˙指定签名release
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+repositories {
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -26,5 +41,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.github.orhanobut:logger:1.12'
     compile project(':vitamio')
 }

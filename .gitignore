@@ -9,3 +9,4 @@
 *.iml
 /keystore
 vitamio/build/
+vitamio/*.iml

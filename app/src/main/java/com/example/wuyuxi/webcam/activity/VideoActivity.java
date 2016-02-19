@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
-import com.example.wuyuxi.webcam.util.Logging;
+import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 
@@ -30,12 +29,10 @@ public class VideoActivity extends BaseActivity {
     private Button btn_play;
     private Button btn_pause;
     private Button btn_replay;
-    public static final int SYNS_HANDLER = 1 * 1000;
 
     public static void launch(Activity activity, String url) {
         Intent intent = new Intent(activity, VideoActivity.class);
         intent.putExtra("url", url);
-        Log.e("TAG", url);
         activity.startActivity(intent);
     }
 
@@ -45,7 +42,7 @@ public class VideoActivity extends BaseActivity {
         setContentView(R.layout.activity_video);
 
         url = getIntent().getStringExtra("url");
-        Logging.d(url);
+        Logger.e(url);
         mSurfaceView = (SurfaceView) findViewById(R.id.video);
 
         mHolder = mSurfaceView.getHolder();
@@ -100,7 +97,7 @@ public class VideoActivity extends BaseActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logging.d("video_close");
+                Logger.e("video_close");
                 release();
                 finish();
             }
@@ -116,6 +113,7 @@ public class VideoActivity extends BaseActivity {
             }
         }
         btn_pause.setEnabled(true);
+        btn_pause.setText("停止");
         btn_play.setEnabled(false);
     }
 

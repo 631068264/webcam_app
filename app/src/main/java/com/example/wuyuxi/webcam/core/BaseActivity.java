@@ -3,7 +3,7 @@ package com.example.wuyuxi.webcam.core;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.example.wuyuxi.webcam.util.Logging;
+import com.orhanobut.logger.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class BaseActivity extends Activity {
      */
     public void showDialog(BaseDialogFragment fragment) {
         if (mDialogContainer.contains(fragment)) {
-            Logging.e(String.format("FragmentDialog %s has already shown in current activity",
+            Logger.e(String.format("FragmentDialog %s has already shown in current activity",
                     fragment.toString()));
         } else {
             mDialogContainer.add(fragment);
