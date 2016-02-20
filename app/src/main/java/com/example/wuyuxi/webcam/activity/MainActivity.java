@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity {
         }
 
         public void onPageFinished(WebView view, String url) {
+
         }
 
         public void onReceivedError(WebView v, int errorCode, String description, String failingUrl) {

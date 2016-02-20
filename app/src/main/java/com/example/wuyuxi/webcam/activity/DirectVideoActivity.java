@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
-import com.orhanobut.logger.Logger;
+import com.example.wuyuxi.webcam.util.Logger;
 
 import java.io.IOException;
 
@@ -90,7 +90,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
                 }
             });
         } catch (IOException e) {
-            Logger.e(e, "error");
+            Logger.e(e);
         }
     }
 

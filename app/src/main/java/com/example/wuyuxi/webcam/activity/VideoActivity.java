@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
-import com.orhanobut.logger.Logger;
+import com.example.wuyuxi.webcam.util.Logger;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package com.example.wuyuxi.webcam.core;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.orhanobut.logger.Logger;
+import com.example.wuyuxi.webcam.util.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
