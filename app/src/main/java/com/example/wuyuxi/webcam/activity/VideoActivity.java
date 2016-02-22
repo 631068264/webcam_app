@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
 import com.example.wuyuxi.webcam.util.Logger;
+import com.example.wuyuxi.webcam.view.LoadingView;
 
 import java.io.IOException;
 
@@ -24,11 +25,15 @@ public class VideoActivity extends BaseActivity {
     private SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
     MediaPlayer mMediaPlayer;
-    private Button back;
+
+    LoadingView mLoading;
+    Button mBack;
+    Button mPlay;
+    Button mPause;
+    Button mReplay;
+
     private String url;
-    private Button btn_play;
-    private Button btn_pause;
-    private Button btn_replay;
+
 
     public static void launch(Activity activity, String url) {
         Intent intent = new Intent(activity, VideoActivity.class);
@@ -43,6 +48,9 @@ public class VideoActivity extends BaseActivity {
 
         url = getIntent().getStringExtra("url");
         Logger.e(url);
+        mLoading = (LoadingView) findViewById(R.id.loading);
+        mLoading.setState(LoadingView.STATE_LOADING);
+
         mSurfaceView = (SurfaceView) findViewById(R.id.video);
 
         mHolder = mSurfaceView.getHolder();
@@ -68,33 +76,33 @@ public class VideoActivity extends BaseActivity {
         mHolder.setFixedSize(480, 320);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        btn_play = (Button) findViewById(R.id.btn_play);
-        btn_play.setOnClickListener(new View.OnClickListener() {
+        mPlay = (Button) findViewById(R.id.btn_play);
+        mPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMediaPlayer.start();
-                btn_play.setEnabled(false);
+                mPlay.setEnabled(false);
             }
         });
 
-        btn_pause = (Button) findViewById(R.id.btn_pause);
-        btn_pause.setOnClickListener(new View.OnClickListener() {
+        mPause = (Button) findViewById(R.id.btn_pause);
+        mPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pause();
             }
         });
 
-        btn_replay = (Button) findViewById(R.id.btn_replay);
-        btn_replay.setOnClickListener(new View.OnClickListener() {
+        mReplay = (Button) findViewById(R.id.btn_replay);
+        mReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replay();
             }
         });
 
-        back = (Button) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
+        mBack = (Button) findViewById(R.id.back);
+        mBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Logger.e("video_close");
@@ -112,21 +120,21 @@ public class VideoActivity extends BaseActivity {
                 mMediaPlayer.start();
             }
         }
-        btn_pause.setEnabled(true);
-        btn_pause.setText("停止");
-        btn_play.setEnabled(false);
+        mPause.setEnabled(true);
+        mPause.setText("停止");
+        mPlay.setEnabled(false);
     }
 
     private void pause() {
-        if (btn_pause.getText().toString().trim().equals("继续")) {
-            btn_pause.setText("停止");
+        if (mPause.getText().toString().trim().equals("继续")) {
+            mPause.setText("停止");
             mMediaPlayer.start();
         } else if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-            btn_pause.setText("继续");
+            mPause.setText("继续");
             mMediaPlayer.pause();
         } else {
-            btn_pause.setEnabled(false);
-            btn_play.setEnabled(true);
+            mPause.setEnabled(false);
+            mPlay.setEnabled(true);
         }
     }
 
@@ -135,8 +143,8 @@ public class VideoActivity extends BaseActivity {
 //        @Override
 //        public void run() {
 //            if (!mMediaPlayer.isPlaying()) {
-//                btn_pause.setEnabled(false);
-//                btn_play.setEnabled(true);
+//                mPause.setEnabled(false);
+//                mPlay.setEnabled(true);
 //            }
 //            handler.postDelayed(this, SYNS_HANDLER);
 //        }
@@ -159,20 +167,23 @@ public class VideoActivity extends BaseActivity {
             mMediaPlayer.reset();
             mMediaPlayer.setDataSource(url);
             mMediaPlayer.prepareAsync();
+            //视频加载
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mMediaPlayer.start();
-                    btn_play.setEnabled(false);
+                    mPlay.setEnabled(false);
+                    mLoading.setState(LoadingView.STATE_GONE);
                     //handler.postDelayed(checkPlaying, SYNS_HANDLER);
                 }
             });
 
+            //视频结束
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    btn_pause.setEnabled(false);
-                    btn_play.setEnabled(true);
+                    mPause.setEnabled(false);
+                    mPlay.setEnabled(true);
                 }
             });
         } catch (IOException e) {

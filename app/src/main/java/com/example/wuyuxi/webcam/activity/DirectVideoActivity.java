@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.wuyuxi.webcam.R;
 import com.example.wuyuxi.webcam.core.BaseActivity;
 import com.example.wuyuxi.webcam.util.Logger;
+import com.example.wuyuxi.webcam.view.LoadingView;
 
 import java.io.IOException;
 
@@ -32,6 +33,10 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
     private Button back;
     private String url;
 
+    LoadingView mLoading;
+
+    private static final int CLIENT_CLOSE_ERROR = -5;
+    private static final int DEVICE_ERROR = -1094995529;
 
     public static void launch(Activity activity, String url) {
         Intent intent = new Intent(activity, DirectVideoActivity.class);
@@ -45,6 +50,8 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
         if (!io.vov.vitamio.LibsChecker.checkVitamioLibs(this))
             return;
         setContentView(R.layout.activity_direct_video);
+        mLoading = (LoadingView) findViewById(R.id.loading);
+        mLoading.setState(LoadingView.STATE_LOADING);
 
 
         back = (Button) findViewById(R.id.back);
@@ -80,9 +87,9 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     if (what == 1) {
-                        if (extra == -5) {
+                        if (extra == CLIENT_CLOSE_ERROR) {
                             Toast.makeText(DirectVideoActivity.this, "请检查客户端是否开启", Toast.LENGTH_LONG).show();
-                        } else if (extra == -1094995529) {
+                        } else if (extra == DEVICE_ERROR) {
                             Toast.makeText(DirectVideoActivity.this, "请检查客户端服务器ip或设备号有没有填错", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -144,17 +151,17 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Logger.e("surfaceChanged called");
+        Logger.e("surfaceDestroyed called");
     }
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
+        Logger.e("onBufferingUpdate");
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        Logger.e("onCompletion");
     }
 
     @Override
@@ -162,6 +169,7 @@ public class DirectVideoActivity extends BaseActivity implements MediaPlayer.OnB
         Logger.e("onPrepared called");
         mIsVideoReadyToBePlayed = true;
         if (mIsVideoReadyToBePlayed && mIsVideoSizeKnown) {
+            mLoading.setState(LoadingView.STATE_GONE);
             startVideo();
         }
     }
