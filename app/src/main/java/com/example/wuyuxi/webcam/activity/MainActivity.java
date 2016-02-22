@@ -14,6 +14,7 @@ import com.example.wuyuxi.webcam.core.BaseActivity;
 import com.example.wuyuxi.webcam.events.ClearCacheEvent;
 import com.example.wuyuxi.webcam.events.UrlEvent;
 import com.example.wuyuxi.webcam.fragment.TestDlgFragment;
+import com.example.wuyuxi.webcam.view.LoadingView;
 
 import de.greenrobot.event.EventBus;
 
@@ -21,21 +22,26 @@ import de.greenrobot.event.EventBus;
  * @Annotation // webView页面
  */
 public class MainActivity extends BaseActivity {
-    private WebView mWebView;
+    WebView mWebView;
+    LoadingView mLoading;
+
     JavaScriptInterface mJavascriptInterface;
     String appUrl = "http://192.168.0.105/webcam/app";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         mWebView = (WebView) findViewById(R.id.webview);
+        mLoading = (LoadingView) findViewById(R.id.loading);
+
         loadWebView(appUrl);
+
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void loadWebView(String url) {
+        mLoading.setState(LoadingView.STATE_LOADING);
         appUrl = url;
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -51,6 +57,7 @@ public class MainActivity extends BaseActivity {
         mWebView.addJavascriptInterface(mJavascriptInterface, "ANDROIDAPI");
 
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+
         mWebView.loadUrl(url);
     }
 
@@ -87,7 +94,7 @@ public class MainActivity extends BaseActivity {
         }
 
         public void onPageFinished(WebView view, String url) {
-
+            mLoading.setState(LoadingView.STATE_GONE);
         }
 
         public void onReceivedError(WebView v, int errorCode, String description, String failingUrl) {

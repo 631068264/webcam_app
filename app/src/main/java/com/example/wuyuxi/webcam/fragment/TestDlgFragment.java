@@ -38,7 +38,7 @@ public class TestDlgFragment extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.cloneInContext(getWrappedContext())
-                .inflate(R.layout.fragment_app_location, container, false);
+                .inflate(R.layout.fragment_location, container, false);
 
         mLayout = (LinearLayout) view.findViewById(R.id.view_layout);
         mText = (EditText) view.findViewById(R.id.url);

@@ -93,6 +93,12 @@
 # support v4
 -keep class android.support.** { *; }
 
+# Keep classes that are referenced on the AndroidManifest
+-keep public class * extends android.app.Activity
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
