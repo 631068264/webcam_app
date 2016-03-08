@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/dianjiang-chpengzh/workspace/Webcam/vitamio/src/main/assets"/></dataSet><dataSet config="debug"><source path="/Users/dianjiang-chpengzh/workspace/Webcam/vitamio/src/debug/assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="D:\ideaProject\java_workspace\webcam_app\vitamio\src\main\assets"/></dataSet><dataSet config="debug"><source path="D:\ideaProject\java_workspace\webcam_app\vitamio\src\debug\assets"/></dataSet></merger>

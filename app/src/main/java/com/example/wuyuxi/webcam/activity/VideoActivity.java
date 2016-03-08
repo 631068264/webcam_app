@@ -25,7 +25,7 @@ public class VideoActivity extends BaseActivity {
     private SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
     MediaPlayer mMediaPlayer;
-
+    private static final String APP_ROOT = "/webcam";
     LoadingView mLoading;
     Button mBack;
     Button mPlay;
@@ -46,7 +46,7 @@ public class VideoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
-        url = getIntent().getStringExtra("url");
+        url = getIntent().getStringExtra("url").replace(APP_ROOT, "");
         Logger.e(url);
         mLoading = (LoadingView) findViewById(R.id.loading);
         mLoading.setState(LoadingView.STATE_LOADING);
