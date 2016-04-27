@@ -8,5 +8,5 @@
 /.idea/libraries
 *.iml
 /keystore
-vitamio/build/
 vitamio/*.iml
+/vitamio/build/

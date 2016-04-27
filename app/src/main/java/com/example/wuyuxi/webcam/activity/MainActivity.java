@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
     LoadingView mLoading;
 
     JavaScriptInterface mJavascriptInterface;
-    String appUrl = "http://192.168.1.174/webcam/app";
+    String appUrl = "http://webcam.ittun.com/webcam/app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
